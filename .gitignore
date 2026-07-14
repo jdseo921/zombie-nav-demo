@@ -1,0 +1,20 @@
+# Block Unity's massive binary cache and internal packages
+/[Ll]ibrary/
+/[Oo]bj/
+
+# Block compiled binaries, local builds, and logs
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]serSettings/
+
+# Block IDE workspace files (Visual Studio, VS Code, Rider)
+.vs/
+.idea/
+.vscode/
+*.sln
+*.csproj
+
+# Block OS system junk
+.DS_Store
+Thumbs.db
