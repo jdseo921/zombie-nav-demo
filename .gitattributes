@@ -1,2 +1,18 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Unity writes these; they are not hand-authored source. Without this, linguist
+# counts 478 .meta and 218 .asset files against 70 .cs files and the repository
+# language bar reports YAML instead of the C# the project actually is.
+*.meta linguist-generated=true
+*.asset linguist-generated=true
+*.prefab linguist-generated=true
+*.unity linguist-generated=true
+*.mat linguist-generated=true
+*.anim linguist-generated=true
+*.controller linguist-generated=true
+*.scenetemplate linguist-generated=true
+*.inputactions linguist-generated=true
+
+# Vendored Unity package source is not this project's work either.
+Packages/** linguist-vendored=true
