@@ -5,27 +5,22 @@ and the same navigation graph: Level 1 hunts you with independent A* replanning,
 you with a coordinated horde that maintains a probability distribution over where you might be
 and searches it.
 
-<!-- SCREENSHOT SLOT. Record docs/media/hero.png, then delete this line and the two
-     around the image below so it renders. It is commented out until then so the
-     front page does not show a broken-image icon.
+![Level 2: the horde mid-chase, with per-zombie role labels and the belief-state HUD](docs/media/hero.png)
 
-![Gameplay](docs/media/hero.png)
+<!-- Still to record into docs/media/, all optional:
 
-Captures to record into docs/media/:
-
-1. hero.png — Level 2 mid-chase, HUD panels expanded, several zombie role labels visible.
-   This is the image at the top of this file, and the one a reviewer will actually look at.
-2. level1-astar.gif — Level 1: a zombie spotting you, the scream pulling a second zombie into
-   Investigate, and both pathing around walls. About 8 seconds.
-3. level2-search.gif — Level 2: break line of sight and hide. Show the GAME INFO panel
+1. level2-search.gif — Level 2: break line of sight and hide. Show the GAME INFO panel
    switching from HUNTING (confirmed) to SEARCHING (peak N%) and the peak percentage falling
    as searchers sweep. This is the single best demonstration of the belief model.
-4. level2-ambush.gif — an ambusher holding a doorway (purple Ambush label), then the
+2. level1-astar.gif — Level 1: a zombie spotting you, the scream pulling a second zombie into
+   Investigate, and both pathing around walls. About 8 seconds.
+3. level2-ambush.gif — an ambusher holding a doorway (purple Ambush label), then the
    "Ambushes N set / M sprung" counter incrementing as you walk into it.
-5. editor-builder.png — the Console after Tools > CP5030 > Setup NPC Demo Arena, showing
+4. editor-builder.png — the Console after Tools > CP5030 > Setup NPC Demo Arena, showing
    the heightmap statistics and the reachability validation output.
 
-Record at 1280x720 or larger, and keep each GIF under roughly 8 MB.
+Record at 1280x720 or larger, and keep each GIF under roughly 8 MB. The release build takes
+-screen-width 1280 -screen-height 720 -screen-fullscreen 0 if you want a clean capture size.
 -->
 
 ## Start here
@@ -187,7 +182,7 @@ You do not need to run the builder to play. Both level prefabs are committed.
 ## Opening and running
 
 **To just play it:** download the Windows x64 build from
-[Releases](https://github.com/jdseo921/Zombie_Demo/releases/latest), unzip, and run
+[Releases](https://github.com/jdseo921/zombie-nav-demo/releases/latest), unzip, and run
 `Zombie Nav Demo.exe`. No Unity install needed.
 
 **To open the project:**
