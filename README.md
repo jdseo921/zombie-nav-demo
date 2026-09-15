@@ -213,15 +213,28 @@ above.
 ## Scope and status
 
 This is a gameplay and AI prototype built for a university unit (CP5030), not a finished game.
-What is real is the systems work: the navigation graph, the collision body, both pursuit
-architectures, the role allocation and belief model, the level generators, and the win/fail loop
-all run, and they are the point of the project. What is placeholder is nearly everything around
-them. The character sprites are AI-generated sheets processed by the importer, the environment
-art is built from course-supplied reference tiles, tall props and units fall back to a generated
-placeholder sprite, and there is no audio in the project at all — no music and no effects. The
-level content is two generated arenas rather than designed levels, the interface is Unity's
-immediate-mode `OnGUI` rather than a built UI, and there is no save system, no progression, and
-no combat beyond contact damage against three hit points. There are no automated tests.
+
+**What is real** — the systems work. All of it runs, and it is the point of the project.
+
+- The navigation graph.
+- The collision body.
+- Both pursuit architectures.
+- The role allocation and belief model.
+- The level generators.
+- The win/fail loop.
+
+**What is placeholder** — nearly everything around them.
+
+- Character sprites are AI-generated sheets processed by the importer.
+- Environment art is built from course-supplied reference tiles.
+- Tall props and units fall back to a generated placeholder sprite.
+- There is no audio in the project at all — no music and no effects.
+- Level content is two generated arenas rather than designed levels.
+- The interface is Unity's immediate-mode `OnGUI` rather than a built UI.
+- There is no save system.
+- There is no progression.
+- There is no combat beyond contact damage against three hit points.
+- There are no automated tests.
 
 ## Known limitations and future work
 
