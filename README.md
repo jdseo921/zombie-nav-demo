@@ -257,10 +257,14 @@ This is a gameplay and AI prototype built for a university unit (CP5030), not a 
 
 ## Known limitations and future work
 
-- **A\* uses a linear-scan open list.** `FindPathInternal` picks the lowest-`f` node by scanning
-  a `List<Vector2Int>` and calls `open.Contains` for each neighbour, under a 40,000-iteration
-  safety cap. A binary heap with a parallel open-set lookup is the obvious replacement, and it
-  matters most on the Level 2 maze, where flankers path across a 120×120 grid.
+- **A\* pops from a binary heap.** `FindPathInternal` previously picked the lowest-`f` node by
+  scanning a `List<Vector2Int>` and called `open.Contains` for each neighbour — both O(n) on
+  every expansion, worst on the Level 2 maze where flankers path across a 120×120 grid. The
+  open set is now a `PathHeap` ordered by `f` then insertion order, with stale entries skipped
+  on pop rather than removed on improvement, which is sound because Manhattan distance on a
+  4-connected uniform-cost grid is a consistent heuristic. The 40,000-iteration safety cap
+  still counts expansions, not stale pops. The GAME INFO panel reports mean path solve time,
+  so the effect is measurable in-game.
 - **The belief update is a full grid sweep on the main thread.** `UpdateBelief` walks every
   column three times per planning tick — diffuse, cull, normalize — and the cull step tests each
   surviving cell against every zombie. It is bounded by `repathInterval` (0.4s) rather than by
