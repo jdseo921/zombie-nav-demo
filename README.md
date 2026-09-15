@@ -5,9 +5,28 @@ and the same navigation graph: Level 1 hunts you with independent A* replanning,
 you with a coordinated horde that maintains a probability distribution over where you might be
 and searches it.
 
+<!-- SCREENSHOT SLOT. Record docs/media/hero.png, then delete this line and the two
+     around the image below so it renders. It is commented out until then so the
+     front page does not show a broken-image icon.
+
 ![Gameplay](docs/media/hero.png)
 
-*The captures to record are listed at the bottom of this file.*
+Captures to record into docs/media/:
+
+1. hero.png — Level 2 mid-chase, HUD panels expanded, several zombie role labels visible.
+   This is the image at the top of this file, and the one a reviewer will actually look at.
+2. level1-astar.gif — Level 1: a zombie spotting you, the scream pulling a second zombie into
+   Investigate, and both pathing around walls. About 8 seconds.
+3. level2-search.gif — Level 2: break line of sight and hide. Show the GAME INFO panel
+   switching from HUNTING (confirmed) to SEARCHING (peak N%) and the peak percentage falling
+   as searchers sweep. This is the single best demonstration of the belief model.
+4. level2-ambush.gif — an ambusher holding a doorway (purple Ambush label), then the
+   "Ambushes N set / M sprung" counter incrementing as you walk into it.
+5. editor-builder.png — the Console after Tools > CP5030 > Setup NPC Demo Arena, showing
+   the heightmap statistics and the reachability validation output.
+
+Record at 1280x720 or larger, and keep each GIF under roughly 8 MB.
+-->
 
 ## What this demonstrates
 
@@ -222,24 +241,6 @@ no combat beyond contact damage against three hit points. There are no automated
   order, accepts the first chokepoint found on an expanding ring search, and only requires that
   posts be 8 cells apart. It never checks that a post actually covers the route the heat came
   from, so an ambusher can end up guarding a doorway you have no reason to use.
-
-## Captures to record
-
-Create `docs/media/` and add the following.
-
-1. `hero.png` — Level 2 mid-chase, HUD panels expanded, several zombie role labels visible.
-   This is the image at the top of this file, and the one a reviewer will actually look at.
-2. `level1-astar.gif` — Level 1: a zombie spotting you, the scream pulling a second zombie into
-   `Investigate`, and both pathing around walls. About 8 seconds.
-3. `level2-search.gif` — Level 2: break line of sight and hide. Show the GAME INFO panel
-   switching from `HUNTING (confirmed)` to `SEARCHING (peak N%)` and the peak percentage falling
-   as searchers sweep. This is the single best demonstration of the belief model.
-4. `level2-ambush.gif` — an ambusher holding a doorway (purple `Ambush` label), then the
-   "Ambushes N set / M sprung" counter incrementing as you walk into it.
-5. `editor-builder.png` — the Console after **Tools > CP5030 > Setup NPC Demo Arena**, showing
-   the heightmap statistics and the reachability validation output.
-
-Record at 1280×720 or larger, and keep each GIF under roughly 8 MB.
 
 ## License
 
