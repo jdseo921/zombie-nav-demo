@@ -186,6 +186,12 @@ You do not need to run the builder to play. Both level prefabs are committed.
 
 ## Opening and running
 
+**To just play it:** download the Windows x64 build from
+[Releases](https://github.com/jdseo921/Zombie_Demo/releases/latest), unzip, and run
+`Zombie Nav Demo.exe`. No Unity install needed.
+
+**To open the project:**
+
 1. Unity **6000.4.10f1** (`ProjectSettings/ProjectVersion.txt`, revision `feeafc12a938`).
 2. Open the project folder in Unity Hub.
 3. Open **`Assets/Scenes/NpcDemoGame.unity`** — the shell scene, and the only scene in the build
