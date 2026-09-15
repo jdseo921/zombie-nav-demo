@@ -1,6 +1,9 @@
 # Block Unity's massive binary cache and internal packages
 /[Ll]ibrary/
 /[Oo]bj/
+/[Tt]emp/
+/[Mm]emoryCaptures/
+/[Rr]ecordings/
 
 # Block compiled binaries, local builds, and logs
 /[Bb]uild/
