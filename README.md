@@ -28,6 +28,22 @@ Captures to record into docs/media/:
 Record at 1280x720 or larger, and keep each GIF under roughly 8 MB.
 -->
 
+## Start here
+
+If you have two minutes:
+
+1. **Read [`HordeDirector.cs`](Assets/Scripts/NpcDemo/HordeDirector.cs) first.** `UpdateBelief`
+   is the whole idea in one method — collapse the distribution on a sighting, diffuse it
+   otherwise, cull every cell a zombie can currently see and does *not* find you in, normalize.
+   The roles, the search peaks and the ambush layer are all allocation on top of that one grid.
+2. **Then [`IsoNavGrid.cs`](Assets/Scripts/NpcDemo/IsoNavGrid.cs).** The substrate both levels
+   share: `FindPath` (A\*), `ComputeFlowField` (one BFS field the whole horde steps along), and
+   `ComputeChokepoints`, which is what makes the ambush layer possible at all.
+3. **If you only run it once, play Level 2.** Let a zombie see you, then break line of sight and
+   hide. Watch the GAME INFO panel switch from `HUNTING (confirmed)` to `SEARCHING (peak N%)`
+   and the percentage fall as the searchers sweep. That is the belief model working, and it is
+   the one thing Level 1 cannot do.
+
 ## What this demonstrates
 
 - **Heightmap navigation graph with A\* pathfinding.** One walkable floor per column with a
