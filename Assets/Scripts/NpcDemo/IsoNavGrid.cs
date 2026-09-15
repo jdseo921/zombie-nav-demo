@@ -505,27 +505,29 @@ public class IsoNavGrid : MonoBehaviour
             return true;
         }
 
-        var open = new List<Vector2Int> { startCol };
+        // Open set is a binary heap ordered by f, then by insertion order so that
+        // ties resolve the same way the previous linear scan resolved them
+        // (earliest inserted wins). Entries are never removed on improvement:
+        // an improved node is pushed again and the stale copy is skipped when it
+        // surfaces. That is safe here because the heuristic is Manhattan distance
+        // on a 4-connected uniform-cost grid, which is consistent, so a node's
+        // first non-stale pop already carries its optimal g.
+        var open = new PathHeap();
         var cameFrom = new Dictionary<Vector2Int, Vector2Int>();
         var gScore = new Dictionary<Vector2Int, int> { { startCol, 0 } };
-        var fScore = new Dictionary<Vector2Int, int> { { startCol, Heuristic(startCol, goalCol) } };
         var closed = new HashSet<Vector2Int>();
+        int sequence = 0;
         int safety = 40000;
+        open.Push(Heuristic(startCol, goalCol), sequence++, startCol);
 
-        while (open.Count > 0 && safety-- > 0)
+        while (open.Count > 0 && safety > 0)
         {
-            int bestIndex = 0;
-            int bestF = fScore[open[0]];
-            for (int i = 1; i < open.Count; i++)
+            Vector2Int current = open.Pop();
+            if (closed.Contains(current))
             {
-                if (fScore[open[i]] < bestF)
-                {
-                    bestF = fScore[open[i]];
-                    bestIndex = i;
-                }
+                continue;   // Stale copy of a node already expanded; not an expansion.
             }
-            Vector2Int current = open[bestIndex];
-            open.RemoveAt(bestIndex);
+            safety--;
 
             if (current == goalCol)
             {
@@ -555,11 +557,7 @@ public class IsoNavGrid : MonoBehaviour
                 }
                 cameFrom[next] = current;
                 gScore[next] = tentative;
-                fScore[next] = tentative + Heuristic(next, goalCol);
-                if (!open.Contains(next))
-                {
-                    open.Add(next);
-                }
+                open.Push(tentative + Heuristic(next, goalCol), sequence++, next);
             }
         }
         return false;
@@ -568,6 +566,94 @@ public class IsoNavGrid : MonoBehaviour
     private static int Heuristic(Vector2Int a, Vector2Int b)
     {
         return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
+    }
+
+    /// <summary>
+    /// Min-heap over (f, insertion order) for the A* open set.
+    ///
+    /// The previous open set was a List scanned linearly for the lowest f, with an
+    /// open.Contains() membership test per neighbour - O(n) for both, on every
+    /// expansion. That cost is worst on the Level 2 maze, where flankers path
+    /// across a 120x120 grid. Pop and Push here are O(log n).
+    ///
+    /// Insertion order is the tie-break so that equal-f nodes come out in the same
+    /// order the linear scan produced them, which keeps route choice stable
+    /// between equally short paths.
+    /// </summary>
+    private sealed class PathHeap
+    {
+        private int[] scores = new int[64];
+        private int[] order = new int[64];
+        private Vector2Int[] nodes = new Vector2Int[64];
+
+        public int Count { get; private set; }
+
+        public void Push(int score, int sequence, Vector2Int node)
+        {
+            if (Count == nodes.Length)
+            {
+                Grow();
+            }
+
+            int i = Count++;
+            scores[i] = score;
+            order[i] = sequence;
+            nodes[i] = node;
+
+            while (i > 0)
+            {
+                int parent = (i - 1) / 2;
+                if (!IsBefore(i, parent)) { break; }
+                Swap(i, parent);
+                i = parent;
+            }
+        }
+
+        public Vector2Int Pop()
+        {
+            Vector2Int top = nodes[0];
+            Count--;
+            if (Count > 0)
+            {
+                scores[0] = scores[Count];
+                order[0] = order[Count];
+                nodes[0] = nodes[Count];
+
+                int i = 0;
+                while (true)
+                {
+                    int left = (2 * i) + 1;
+                    if (left >= Count) { break; }
+                    int right = left + 1;
+                    int best = (right < Count && IsBefore(right, left)) ? right : left;
+                    if (!IsBefore(best, i)) { break; }
+                    Swap(i, best);
+                    i = best;
+                }
+            }
+            return top;
+        }
+
+        private bool IsBefore(int a, int b)
+        {
+            if (scores[a] != scores[b]) { return scores[a] < scores[b]; }
+            return order[a] < order[b];
+        }
+
+        private void Swap(int a, int b)
+        {
+            int score = scores[a]; scores[a] = scores[b]; scores[b] = score;
+            int seq = order[a]; order[a] = order[b]; order[b] = seq;
+            Vector2Int node = nodes[a]; nodes[a] = nodes[b]; nodes[b] = node;
+        }
+
+        private void Grow()
+        {
+            int size = nodes.Length * 2;
+            System.Array.Resize(ref scores, size);
+            System.Array.Resize(ref order, size);
+            System.Array.Resize(ref nodes, size);
+        }
     }
 
     /// <summary>True when a path exists from one cell to another (used by the arena validator).</summary>
