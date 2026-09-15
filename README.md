@@ -250,7 +250,10 @@ This is a gameplay and AI prototype built for a university unit (CP5030), not a 
 - There is no save system.
 - There is no progression.
 - There is no combat beyond contact damage against three hit points.
-- There are no automated tests.
+- Automated testing reaches the navigation core only. 16 edit-mode tests cover
+  [`IsoNavGrid`](Assets/Editor/Tests/IsoNavGridTests.cs) — walkability, the `MaxStep` height
+  gating, A\*, chokepoint detection, line of sight and the flow field. There are no play-mode
+  tests, and neither pursuit architecture is covered end to end.
 
 ## Known limitations and future work
 
