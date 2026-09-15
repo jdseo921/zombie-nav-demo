@@ -311,8 +311,10 @@ public class IsoNavGridTests
 
         int reachable = nav.CountReachableFrom(Cell(nav, 0, 1));
 
-        Assert.AreEqual(6, nav.TotalWalkableColumns, "six columns are walkable in total");
-        Assert.AreEqual(5, reachable, "the pocket behind the wall is not reachable");
+        // The open left side is the 2x3 block at x0-x1; the pocket is x3-x4 at y1,
+        // sealed off by the x2 wall column.
+        Assert.AreEqual(8, nav.TotalWalkableColumns, "six open columns plus the two-column pocket");
+        Assert.AreEqual(6, reachable, "the pocket behind the wall is not reachable");
     }
 }
 #endif
