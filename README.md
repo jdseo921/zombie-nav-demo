@@ -44,10 +44,12 @@ If you have two minutes:
 2. **Then [`IsoNavGrid.cs`](Assets/Scripts/NpcDemo/IsoNavGrid.cs).** The substrate both levels
    share: `FindPath` (A\*), `ComputeFlowField` (one BFS field the whole horde steps along), and
    `ComputeChokepoints`, which is what makes the ambush layer possible at all.
-3. **If you only run it once, play Level 2.** Let a zombie see you, then break line of sight and
-   hide. Watch the GAME INFO panel switch from `HUNTING (confirmed)` to `SEARCHING (peak N%)`
-   and the percentage fall as the searchers sweep. That is the belief model working, and it is
-   the one thing Level 1 cannot do.
+3. **If you only run it once, play Level 2.**
+   [Download the Windows build](https://github.com/jdseo921/zombie-nav-demo/releases/latest) —
+   no Unity needed. Let a zombie see you, then break line of sight and hide. Watch the GAME INFO
+   panel switch from `HUNTING (confirmed)` to `SEARCHING (peak N%)` and the percentage fall as
+   the searchers sweep. That is the belief model working, and it is the one thing Level 1
+   cannot do.
 
 ## What this demonstrates
 
@@ -173,7 +175,9 @@ pre-positions for where the target will *return*. Both counters are surfaced on 
 
 ## Editor tooling
 
-All four tools live in [`Assets/Editor/`](Assets/Editor) and are editor-only (`#if UNITY_EDITOR`).
+The four level-authoring tools live in [`Assets/Editor/`](Assets/Editor) and are editor-only
+(`#if UNITY_EDITOR`), alongside [`BuildDemo.cs`](Assets/Editor/BuildDemo.cs) (the command-line
+build entry point) and the [edit-mode tests](Assets/Editor/Tests/IsoNavGridTests.cs).
 
 | File | Lines | Purpose |
 | ---- | ----- | ------- |
@@ -182,10 +186,10 @@ All four tools live in [`Assets/Editor/`](Assets/Editor) and are editor-only (`#
 | [`JayGeneratedCampusTilemapBuilder.cs`](Assets/Editor/JayGeneratedCampusTilemapBuilder.cs) | 851 | The earlier bounded generator (Canteen 42×24, Block E 28×24) that enforces fixed design bounds and reports out-of-bounds tiles to the Console. |
 | [`JayNpcSpriteImporter.cs`](Assets/Editor/JayNpcSpriteImporter.cs) | 386 | Turns the raw character sheets in `SpriteStaging/` into sliced sprites. Keys out a baked-in checkerboard by flood-filling from the image border (so enclosed light pixels such as eyes survive), detects each frame as a connected pixel island, groups islands into front and rear rows, and slices with bottom-centre pivots at a PPU chosen to make characters about 1.4 world units tall. |
 
-Only one menu entry is registered: **Tools > CP5030 > Setup NPC Demo Arena**. The large-campus
-builder and the sprite importer are invoked programmatically from that chain. The bounded
-generator has no `[MenuItem]` attribute in the current source and is not called by the demo
-builder — it is standalone history.
+Two menu entries are registered: **Tools > CP5030 > Setup NPC Demo Arena** (the chain above) and
+**Tools > CP5030 > Build Windows Demo**. The large-campus builder and the sprite importer are
+invoked programmatically from the arena chain. The bounded generator has no `[MenuItem]`
+attribute in the current source and is not called by the demo builder — it is standalone history.
 
 You do not need to run the builder to play. Both level prefabs are committed.
 
