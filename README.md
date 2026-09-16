@@ -194,8 +194,8 @@ You do not need to run the builder to play. Both level prefabs are committed.
    prefabs from `Resources/NpcDemo/` at runtime.
 4. Press Play, then choose Level 1 or Level 2 from the menu.
 
-The other two scenes are working files, not entry points: `NpcDemo.unity` is a pre-built arena
-for editing in isolation, and `Game Scene.unity` is an earlier prototype scene.
+`NpcDemo.unity` is a working file rather than an entry point: a pre-built arena for editing in
+isolation.
 
 **Objective:** reach the green extraction zone with **both** survivors. If the player dies, or
 any survivor is killed, the level fails and offers a restart.
@@ -222,10 +222,9 @@ director's mode (`calm`, `HUNTING (confirmed)` or `SEARCHING (peak N%)`), the nu
 routes, and the ambush counters. Each zombie additionally carries a world-space label showing
 its current role, colour-coded per role.
 
-Note that `Assets/Settings/InputSystem_Actions.inputactions` is the stock Unity input template.
-It is used by the older `Assets/Scripts/Player/` scripts on
-`Assets/Prefabs/Mobs/Player/Player.prefab`, which no demo level references — not by the controls
-above.
+Note that `Assets/Settings/InputSystem_Actions.inputactions` is the stock Unity input template,
+left in place because the project references it in its settings. Nothing in the demo reads it —
+the controls above are polled directly from `Keyboard.current`.
 
 ## Scope and status
 
