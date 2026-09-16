@@ -230,7 +230,14 @@ This is a gameplay and AI prototype built for a university unit (CP5030), not a 
   posts be 8 cells apart. It never checks that a post actually covers the route the heat came
   from, so an ambusher can end up guarding a doorway you have no reason to use.
 
-## License
+## Intellectual Property & Usage
 
-[MIT](LICENSE) for the code. Third-party and placeholder art assets are excluded — see the
-LICENSE file.
+This repository contains personal portfolio code for employment review. All rights are reserved
+by the author. No permission is granted for commercial reuse, redistribution, or modification.
+
+The reservation above covers the original C# under `Assets/Scripts/` and `Assets/Editor/`. It
+does not extend to third-party material bundled so the prototype runs, which remains subject to
+its owners' terms: the reference tilesets and sprite sheets under `Assets/Imports/`, which come
+from course-supplied material rather than from this project, and Unity Editor, the Unity Engine
+and the packages resolved into `Packages/`, which are licensed by Unity Technologies and the
+respective package authors.
