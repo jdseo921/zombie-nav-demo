@@ -5,23 +5,33 @@ and the same navigation graph: Level 1 hunts you with independent A* replanning,
 you with a coordinated horde that maintains a probability distribution over where you might be
 and searches it.
 
-![Level 2: the horde mid-chase, with per-zombie role labels and the belief-state HUD](docs/media/hero.png)
+![Level 2 mid-chase: per-zombie role labels and the belief-state HUD](docs/media/hero.png)
 
-<!-- Still to record into docs/media/, all optional:
+**Hiding works, because the horde is tracking a belief rather than you.**
 
-1. level2-search.gif — Level 2: break line of sight and hide. Show the GAME INFO panel
-   switching from HUNTING (confirmed) to SEARCHING (peak N%) and the peak percentage falling
-   as searchers sweep. This is the single best demonstration of the belief model.
-2. level1-astar.gif — Level 1: a zombie spotting you, the scream pulling a second zombie into
-   Investigate, and both pathing around walls. About 8 seconds.
-3. level2-ambush.gif — an ambusher holding a doorway (purple Ambush label), then the
-   "Ambushes N set / M sprung" counter incrementing as you walk into it.
-4. editor-builder.png — the Console after Tools > CP5030 > Setup NPC Demo Arena, showing
-   the heightmap statistics and the reachability validation output.
+![Breaking line of sight flips the horde from HUNTING to SEARCHING](docs/media/level2-search.gif)
 
-Record at 1280x720 or larger, and keep each GIF under roughly 8 MB. The release build takes
--screen-width 1280 -screen-height 720 -screen-fullscreen 0 if you want a clean capture size.
--->
+The GAME INFO panel starts on `Horde: HUNTING (confirmed)` — a zombie has eyes on the player,
+so the belief has collapsed to a single cell. Breaking line of sight drops the confirmation and
+the panel switches to `SEARCHING (peak 35%)`: the horde no longer knows where the player is and
+is working a probability distribution instead. Level 1 cannot do this — it reads the player's
+true position for as long as it has sight.
+
+**Ambushers pre-position on the routes the player keeps using.**
+
+![Ambushers holding chokepoints while the target is unconfirmed](docs/media/level2-ambush.gif)
+
+`Ambushes 6 set` with `Zombie 1: Ambush` holding position. While the target is unconfirmed the
+director sends spare zombies to the chokepoints nearest the hottest cells of a decaying visit
+heatmap — guarding where the player has been going rather than chasing where they are. The clip
+ends with `Horde: calm` as the belief mass falls below its threshold and the search is called off.
+
+<!-- Not captured yet, both optional:
+     - an ambush actually springing ("Ambushes N set / M sprung" incrementing). Build the heatmap
+       by walking a route until `routes` climbs, break line of sight, then walk back along it.
+     - level1-astar.gif — the Level 1 control condition: a zombie spotting you, the scream pulling
+       a second into Investigate. Lower value; the comparison is already made above.
+     Format to match: 800x600, 8fps, ezgif lossy ~75, under 8 MB. -->
 
 ## Start here
 
