@@ -11,8 +11,9 @@ and searches it.
 
 ![Breaking line of sight flips the horde from HUNTING to SEARCHING](docs/media/level2-search.gif)
 
-The top-right info panel — its title bar reads `LEVEL 2 (HARD)` — starts on `Horde: HUNTING
-(confirmed)`: a zombie has eyes on the player, so the belief has collapsed to a single cell.
+The top-right info panel — its title bar reads `LEVEL 2 (HARD)` — starts on
+`Horde: HUNTING (confirmed)`: a zombie has eyes on the player, so the belief has collapsed to a
+single cell.
 Breaking line of sight drops the confirmation and the panel switches to `SEARCHING (peak 35%)`:
 the horde no longer knows where the player is and is working a probability distribution instead.
 Level 1 cannot do this — it reads the player's true position for as long as it has sight.
@@ -94,84 +95,23 @@ If you have two minutes:
 Both levels share one navigation graph, one collision body and one sensor model. What changes is
 *what the zombies are allowed to know* and *who decides where they go*.
 
-### Level 1 — independent A* against a moving target
+**Level 1** gives every zombie its own state machine and its own A\*. A zombie with line of sight
+paths to the player's **true cell** and replans as the player moves; losing sight only starts a
+grace timer. Entering a chase screams, pulling nearby patrols in to investigate —
+[`NpcController.cs`](Assets/Scripts/NpcDemo/NpcController.cs).
 
-Each zombie in [`NpcController.cs`](Assets/Scripts/NpcDemo/NpcController.cs) is autonomous and
-runs a small state machine: `Patrol → Investigate → Chase → Attack`, plus `Flee` and `Follow`
-for civilians. A zombie sees the player within `sightRange` when line of sight is clear, and
-hears a sprinting player through walls within `hearingRange`. On acquiring a target it runs A*
-to the target's **true cell**, then replans whenever that target steps onto a new cell,
-rate-limited to one search per `MinRepathInterval` (0.2s); a zombie investigating a heard noise
-instead replans on the slower `RepathInterval` (0.5s). This is classical replanning against a
-moving target (Hart, Nilsson & Raphael 1968; Ishida & Korf, *Moving Target Search*, 1991).
+**Level 2** takes that knowledge away. One director
+([`HordeDirector.cs`](Assets/Scripts/NpcDemo/HordeDirector.cs)) keeps a probability distribution
+over every walkable cell: collapsed to a single cell on a sighting, otherwise diffused, and culled
+wherever a zombie looks and does not find you. From that belief it picks one goal, publishes one
+flow field the whole horde steps along, splits the horde into chasers and flankers when you are
+confirmed or searchers when you are not, and parks spare zombies on chokepoints near the routes
+you keep using.
 
-Two details make it read as a pack rather than three separate chasers. Entering a chase fires a
-"scream" (`AlertNearbyZombies`) that pushes patrolling zombies within `alertRadius` into
-`Investigate` on the target's cell. And on losing the trail a zombie walks to the last known
-position before returning to patrol, rather than snapping back instantly.
+**The consequence that matters:** hiding works against Level 2 and does not against Level 1,
+because Level 2 is hunting a belief rather than you.
 
-The important limitation is deliberate: **a Level 1 zombie always reads the player's true
-position once it has line of sight.** Breaking line of sight only starts a grace timer
-(`loseSightGrace`).
-
-### Level 2 — occupancy-grid belief, flow field, roles, ambush
-
-[`HordeDirector.cs`](Assets/Scripts/NpcDemo/HordeDirector.cs) is a single central planner; the
-zombies in [`HordeZombieController.cs`](Assets/Scripts/NpcDemo/HordeZombieController.cs) only
-execute assigned roles. The director ticks every `repathInterval` (0.4s) and runs four layers.
-
-**1. Belief over where the player is.** The director keeps a probability `belief[]` over every
-walkable column. Each tick is one recursive-Bayes step:
-
-- *Collapse.* If any zombie currently sees or hears the player (`TargetConfirmed` — a sighting
-  within the last 0.6s), the belief collapses to a single cell with probability 1.
-- *Diffusion.* Otherwise the mass spreads to walkable neighbours at `diffusionRate`, a
-  random-walk motion model for a target the horde cannot see.
-- *Culling by negative observation.* Any cell a zombie can currently see (within
-  `sightCullRange`, with clear line of sight) is multiplied by `negativeObservation` (0.06).
-  Looking somewhere and *not* finding the player is evidence, so sweeping zombies squeeze the
-  probability mass.
-- *Normalize.* If the total mass falls below `1e-6`, every plausible hiding place has been
-  cleared and the horde stands down.
-
-This is the occupancy-grid idea from robotics (Moravec & Elfes 1985; Elfes 1989) adapted to game
-AI for probabilistic target tracking and search (Isla 2006; Isla, *Third Eye Crime*, AIIDE
-2013). The consequence that matters for play: **while you are hidden the horde never reads your
-true position — it hunts the belief**, so breaking line of sight genuinely works.
-
-**2. Shared flow field.** Once the director picks a goal — your cell when confirmed, the belief
-peak when not — it calls `nav.ComputeFlowField(target)` once. Every chasing zombie then reads
-its next step straight off that field in O(1) instead of running its own A* (potential fields,
-Khatib 1986; continuum crowd fields, Treuille, Cooper & Popović 2006).
-
-**3. Role allocation.** The horde is sorted by flow distance to the goal, then split by
-`flankerFraction` (0.5):
-
-- *Target confirmed* — the nearest half take `Chase` and ride the flow field. The farthest half
-  take `Flank` and A* to cut-off cells arranged in a ring (`encircleRadius`) around a predicted
-  intercept point, computed from your current velocity times `interceptLeadSeconds`. This is
-  pursuit role allocation (Hespanha, Kim & Sastry 1999; Vidal et al. 2002; graph pursuit,
-  "cops and robbers", Nowakowski & Winkler 1983).
-- *Target hidden* — the nearest half converge on the belief peak while the farthest half take
-  `Search` and are spread across the secondary peaks (`CollectSearchPeaks`, spaced at least 10
-  cells apart), so the horde sweeps several hypotheses at once instead of clumping on one.
-
-**4. Habit-anticipatory ambush.** A decaying visit heatmap (decay 0.98 per 0.4s tick) records
-where you actually walk, and the strongest cells become `hotspots`. The heatmap does two jobs.
-It biases belief diffusion toward your habitual routes (`heatBias`), and it drives an ambush
-layer: whenever the target is **not** confirmed — including while the horde is otherwise calm —
-up to `maxAmbushers` zombies are sent to the nearest **chokepoint** to a hotspot and hold
-position there. Chokepoints are computed statically from the navigation graph in
-`IsoNavGrid.ComputeChokepoints`: a cell you can pass through along one axis where the
-perpendicular clearance is at most 2 cells, which is to say doorways and tight corridors. An
-ambusher approaches at patrol speed, then stands still until you come within
-`ambushTriggerRange`; springing the trap counts as an observation and collapses the belief.
-
-The source comment flags this fusion — online route learning (cf. Yannakakis & Togelius 2013),
-static chokepoint topology, and pre-emptive role allocation — as the project's own extension:
-the cited techniques react to where the target *is* or probably is, while this layer
-pre-positions for where the target will *return*. Both counters are surfaced on the HUD as
-"Ambushes N set / M sprung".
+**[Full write-up — every layer, parameter and citation →](docs/AI_ARCHITECTURE.md)**
 
 ### What each level actually ships
 
@@ -185,26 +125,24 @@ pre-positions for where the target will *return*. Both counters are surfaced on 
 
 ## Editor tooling
 
-Three level-authoring tools live in [`Assets/Editor/`](Assets/Editor) and are editor-only
+Three level-authoring tools live in [`Assets/Editor/`](Assets/Editor), editor-only
 (`#if UNITY_EDITOR`), alongside [`BuildDemo.cs`](Assets/Editor/BuildDemo.cs) (the command-line
 build entry point) and the [edit-mode tests](Assets/Editor/Tests/IsoNavGridTests.cs).
 
 | File | Lines | Purpose |
 | ---- | ----- | ------- |
-| [`JayNpcDemoBuilder.cs`](Assets/Editor/JayNpcDemoBuilder.cs) | 2,021 | The one-click chain. Builds both arenas, spawns actors, wires the HUD and objective, saves the `Level1`/`Level2` prefabs into `Assets/Resources/NpcDemo/`, and creates the game scene. Also runs the post-build reachability validation and the maze auto-repair pass. |
-| [`JayLargeCampusTilemapBuilder.cs`](Assets/Editor/JayLargeCampusTilemapBuilder.cs) | 1,399 | Large-scale campus generator (Canteen 168×96, Block E 112×96 cells) built on the reference isometric tiles. Its `SetupTileAssets()` is the first step the demo builder calls. |
-| [`JayNpcSpriteImporter.cs`](Assets/Editor/JayNpcSpriteImporter.cs) | 386 | Turns the raw character sheets in `SpriteStaging/` into sliced sprites. Keys out a baked-in checkerboard by flood-filling from the image border (so enclosed light pixels such as eyes survive), detects each frame as a connected pixel island, groups islands into front and rear rows, and slices with bottom-centre pivots at a PPU chosen to make characters about 1.4 world units tall. |
+| [`JayNpcDemoBuilder.cs`](Assets/Editor/JayNpcDemoBuilder.cs) | 2,021 | The one-click chain: builds both arenas, spawns actors, wires the HUD and objective, saves the `Level1`/`Level2` prefabs into `Assets/Resources/NpcDemo/` and creates the game scene. |
+| [`JayLargeCampusTilemapBuilder.cs`](Assets/Editor/JayLargeCampusTilemapBuilder.cs) | 1,399 | Campus generator (Canteen 168×96, Block E 112×96 cells) on the reference isometric tiles, whose `SetupTileAssets()` the chain calls first. |
+| [`JayNpcSpriteImporter.cs`](Assets/Editor/JayNpcSpriteImporter.cs) | 386 | Slices the raw sheets in `SpriteStaging/` into sprites, keying out the baked-in checkerboard and detecting each animation frame as a connected pixel island. |
 
-Two menu entries are registered: **Tools > CP5030 > Setup NPC Demo Arena** (the chain above) and
-**Tools > CP5030 > Build Windows Demo**. The large-campus builder and the sprite importer are
-invoked programmatically from the arena chain.
+Two menu entries are registered — **Tools > CP5030 > Setup NPC Demo Arena** and
+**Tools > CP5030 > Build Windows Demo**; the other two tools run from inside the chain. Both
+level prefabs are committed, so you do not need the builder to play.
 
 A fourth file,
 [`JayGeneratedCampusTilemapBuilder.cs`](Assets/Editor/JayGeneratedCampusTilemapBuilder.cs) (851
-lines), is an earlier bounded generator (Canteen 42×24, Block E 28×24) kept as history: it has no
+lines), is an earlier bounded generator (Canteen 42×24, Block E 28×24) kept as history: no
 `[MenuItem]`, no caller, and nothing in the project references it.
-
-You do not need to run the builder to play. Both level prefabs are committed.
 
 ## Opening and running
 
