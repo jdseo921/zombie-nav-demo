@@ -11,11 +11,11 @@ and searches it.
 
 ![Breaking line of sight flips the horde from HUNTING to SEARCHING](docs/media/level2-search.gif)
 
-The GAME INFO panel starts on `Horde: HUNTING (confirmed)` — a zombie has eyes on the player,
-so the belief has collapsed to a single cell. Breaking line of sight drops the confirmation and
-the panel switches to `SEARCHING (peak 35%)`: the horde no longer knows where the player is and
-is working a probability distribution instead. Level 1 cannot do this — it reads the player's
-true position for as long as it has sight.
+The top-right info panel — its title bar reads `LEVEL 2 (HARD)` — starts on `Horde: HUNTING
+(confirmed)`: a zombie has eyes on the player, so the belief has collapsed to a single cell.
+Breaking line of sight drops the confirmation and the panel switches to `SEARCHING (peak 35%)`:
+the horde no longer knows where the player is and is working a probability distribution instead.
+Level 1 cannot do this — it reads the player's true position for as long as it has sight.
 
 **Ambushers pre-position on the routes the player keeps using.**
 
@@ -46,7 +46,7 @@ If you have two minutes:
    `ComputeChokepoints`, which is what makes the ambush layer possible at all.
 3. **If you only run it once, play Level 2.**
    [Download the Windows build](https://github.com/jdseo921/zombie-nav-demo/releases/latest) —
-   no Unity needed. Let a zombie see you, then break line of sight and hide. Watch the GAME INFO
+   no Unity needed. Let a zombie see you, then break line of sight and hide. Watch the info
    panel switch from `HUNTING (confirmed)` to `SEARCHING (peak N%)` and the percentage fall as
    the searchers sweep. That is the belief model working, and it is the one thing Level 1
    cannot do.
@@ -213,13 +213,13 @@ You do not need to run the builder to play. Both level prefabs are committed.
 
 1. Unity **6000.4.10f1** (`ProjectSettings/ProjectVersion.txt`, revision `feeafc12a938`).
 2. Open the project folder in Unity Hub.
-3. Open **`Assets/Scenes/NpcDemoGame.unity`** — the shell scene, and the only scene in the build
-   settings. It contains the `GameManager`, which draws the menu and instantiates the level
+3. Open **`Assets/Scenes/NpcDemoGame.unity`** — the shell scene, and the only enabled scene in the
+   build settings. It contains the `GameManager`, which draws the menu and instantiates the level
    prefabs from `Resources/NpcDemo/` at runtime.
 4. Press Play, then choose Level 1 or Level 2 from the menu.
 
 `NpcDemo.unity` is a working file rather than an entry point: a pre-built arena for editing in
-isolation.
+isolation. It is listed in the build settings but disabled, so it does not ship.
 
 **Objective:** reach the green extraction zone with **both** survivors. If the player dies, or
 any survivor is killed, the level fails and offers a restart.
@@ -235,16 +235,16 @@ in the gameplay scripts.
 | Hold `Left Shift` | Sprint — zombies hear this through walls | `DemoPlayerController.Update` |
 | `Esc` | Pause and resume (Resume, Restart Level, Settings, Main Menu) | `GameManager.Update` |
 
-**There are no debug hotkeys.** The three HUD panels — OBJECTIVE (top-left), GAME INFO and
-CONTROLS (top-right) — are collapsed and expanded with the on-screen `-` / `+` button on each
-panel title bar (`DemoUI.PanelHeader`), using the mouse.
+**There are no debug hotkeys.** The three HUD panels — OBJECTIVE (top-left), the level info
+panel and CONTROLS (top-right) — are collapsed and expanded with the on-screen `-` / `+` button
+on each panel title bar (`DemoUI.PanelHeader`), using the mouse.
 
-The GAME INFO panel ([`NavMetricsHud.cs`](Assets/Scripts/NpcDemo/NavMetricsHud.cs)) reports the
-level's algorithm label, frame rate, player HP, A* paths succeeded versus requested, mean path
-solve time in milliseconds, and the stuck-recovery count. On Level 2 it also shows the
-director's mode (`calm`, `HUNTING (confirmed)` or `SEARCHING (peak N%)`), the number of learned
-routes, and the ambush counters. Each zombie additionally carries a world-space label showing
-its current role, colour-coded per role.
+The info panel ([`NavMetricsHud.cs`](Assets/Scripts/NpcDemo/NavMetricsHud.cs)) is titled with the
+level name rather than a fixed caption. It reports the level's algorithm label, frame rate, player
+HP, A* paths succeeded versus requested, mean path solve time in milliseconds, and the
+stuck-recovery count. On Level 2 it also shows the director's mode (`calm`, `HUNTING (confirmed)`
+or `SEARCHING (peak N%)`), the number of learned routes, and the ambush counters. Each zombie
+additionally carries a world-space label showing its current role, colour-coded per role.
 
 Note that `Assets/Settings/InputSystem_Actions.inputactions` is the stock Unity input template,
 left in place because the project references it in its settings. Nothing in the demo reads it —
