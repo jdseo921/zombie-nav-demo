@@ -262,6 +262,10 @@ This is a gameplay and AI prototype built for a university unit (CP5030), not a 
 - The role allocation and belief model.
 - The level generators.
 - The win/fail loop.
+- The navigation core is covered by tests. 16 edit-mode tests exercise
+  [`IsoNavGrid`](Assets/Editor/Tests/IsoNavGridTests.cs) — walkability, the `MaxStep` height
+  gating, A\*, chokepoint detection, line of sight and the flow field. That is the bound of the
+  coverage: there are no play-mode tests, and neither pursuit architecture is covered end to end.
 
 **What is placeholder** — nearly everything around them.
 
@@ -274,10 +278,6 @@ This is a gameplay and AI prototype built for a university unit (CP5030), not a 
 - There is no save system.
 - There is no progression.
 - There is no combat beyond contact damage against three hit points.
-- Automated testing reaches the navigation core only. 16 edit-mode tests cover
-  [`IsoNavGrid`](Assets/Editor/Tests/IsoNavGridTests.cs) — walkability, the `MaxStep` height
-  gating, A\*, chokepoint detection, line of sight and the flow field. There are no play-mode
-  tests, and neither pursuit architecture is covered end to end.
 
 ## Known limitations and future work
 
