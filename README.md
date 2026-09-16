@@ -139,11 +139,6 @@ Two menu entries are registered — **Tools > CP5030 > Setup NPC Demo Arena** an
 **Tools > CP5030 > Build Windows Demo**; the other two tools run from inside the chain. Both
 level prefabs are committed, so you do not need the builder to play.
 
-A fourth file,
-[`JayGeneratedCampusTilemapBuilder.cs`](Assets/Editor/JayGeneratedCampusTilemapBuilder.cs) (851
-lines), is an earlier bounded generator (Canteen 42×24, Block E 28×24) kept as history: no
-`[MenuItem]`, no caller, and nothing in the project references it.
-
 ## Opening and running
 
 **To just play it:** download the Windows x64 build from

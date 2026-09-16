@@ -2,7 +2,7 @@
 * text=auto
 
 # Unity writes these; they are not hand-authored source. Without this, linguist
-# counts 404 .meta and 218 .asset files against 21 .cs files and the repository
+# counts 403 .meta and 218 .asset files against 20 .cs files and the repository
 # language bar reports YAML instead of the C# the project actually is.
 *.meta linguist-generated=true
 *.asset linguist-generated=true
