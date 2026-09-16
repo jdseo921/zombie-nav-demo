@@ -185,7 +185,7 @@ pre-positions for where the target will *return*. Both counters are surfaced on 
 
 ## Editor tooling
 
-The four level-authoring tools live in [`Assets/Editor/`](Assets/Editor) and are editor-only
+Three level-authoring tools live in [`Assets/Editor/`](Assets/Editor) and are editor-only
 (`#if UNITY_EDITOR`), alongside [`BuildDemo.cs`](Assets/Editor/BuildDemo.cs) (the command-line
 build entry point) and the [edit-mode tests](Assets/Editor/Tests/IsoNavGridTests.cs).
 
@@ -193,13 +193,16 @@ build entry point) and the [edit-mode tests](Assets/Editor/Tests/IsoNavGridTests
 | ---- | ----- | ------- |
 | [`JayNpcDemoBuilder.cs`](Assets/Editor/JayNpcDemoBuilder.cs) | 2,021 | The one-click chain. Builds both arenas, spawns actors, wires the HUD and objective, saves the `Level1`/`Level2` prefabs into `Assets/Resources/NpcDemo/`, and creates the game scene. Also runs the post-build reachability validation and the maze auto-repair pass. |
 | [`JayLargeCampusTilemapBuilder.cs`](Assets/Editor/JayLargeCampusTilemapBuilder.cs) | 1,399 | Large-scale campus generator (Canteen 168×96, Block E 112×96 cells) built on the reference isometric tiles. Its `SetupTileAssets()` is the first step the demo builder calls. |
-| [`JayGeneratedCampusTilemapBuilder.cs`](Assets/Editor/JayGeneratedCampusTilemapBuilder.cs) | 851 | The earlier bounded generator (Canteen 42×24, Block E 28×24) that enforces fixed design bounds and reports out-of-bounds tiles to the Console. |
 | [`JayNpcSpriteImporter.cs`](Assets/Editor/JayNpcSpriteImporter.cs) | 386 | Turns the raw character sheets in `SpriteStaging/` into sliced sprites. Keys out a baked-in checkerboard by flood-filling from the image border (so enclosed light pixels such as eyes survive), detects each frame as a connected pixel island, groups islands into front and rear rows, and slices with bottom-centre pivots at a PPU chosen to make characters about 1.4 world units tall. |
 
 Two menu entries are registered: **Tools > CP5030 > Setup NPC Demo Arena** (the chain above) and
 **Tools > CP5030 > Build Windows Demo**. The large-campus builder and the sprite importer are
-invoked programmatically from the arena chain. The bounded generator has no `[MenuItem]`
-attribute in the current source and is not called by the demo builder — it is standalone history.
+invoked programmatically from the arena chain.
+
+A fourth file,
+[`JayGeneratedCampusTilemapBuilder.cs`](Assets/Editor/JayGeneratedCampusTilemapBuilder.cs) (851
+lines), is an earlier bounded generator (Canteen 42×24, Block E 28×24) kept as history: it has no
+`[MenuItem]`, no caller, and nothing in the project references it.
 
 You do not need to run the builder to play. Both level prefabs are committed.
 
