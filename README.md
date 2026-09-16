@@ -57,6 +57,16 @@ If you have two minutes:
   float height; ramps sit at `level + 0.5` and steps are gated purely by height difference
   (`MaxStep = 0.6`), so a placed ramp is always climbable and a cliff is always blocked
   independently of colliders — [`IsoNavGrid.cs`](Assets/Scripts/NpcDemo/IsoNavGrid.cs).
+- **A\* pops from a binary heap.** `FindPathInternal` previously picked the lowest-`f` node by
+  scanning a `List<Vector2Int>` and called `open.Contains` for each neighbour — both O(n) on
+  every expansion, worst on the Level 2 maze where flankers path across a 120×120 grid. The
+  open set is now a `PathHeap` ordered by `f` then insertion order, with stale entries skipped
+  on pop rather than removed on improvement, which is sound because Manhattan distance on a
+  4-connected uniform-cost grid is a consistent heuristic. The 40,000-iteration safety cap
+  still counts expansions, not stale pops.
+  <!-- TODO (jdseo921): insert the measured before/after mean path solve time here. The info
+       panel reports it live; take Level 2 readings on the same route, list before and after.
+       Do not estimate it. -->
 - **Shared BFS flow field for many agents.** One distance field per planning tick serves the
   whole horde, so each zombie takes an O(1) step instead of running its own search —
   `ComputeFlowField` / `FlowNextStep` in [`IsoNavGrid.cs`](Assets/Scripts/NpcDemo/IsoNavGrid.cs).
@@ -271,14 +281,6 @@ This is a gameplay and AI prototype built for a university unit (CP5030), not a 
 
 ## Known limitations and future work
 
-- **A\* pops from a binary heap.** `FindPathInternal` previously picked the lowest-`f` node by
-  scanning a `List<Vector2Int>` and called `open.Contains` for each neighbour — both O(n) on
-  every expansion, worst on the Level 2 maze where flankers path across a 120×120 grid. The
-  open set is now a `PathHeap` ordered by `f` then insertion order, with stale entries skipped
-  on pop rather than removed on improvement, which is sound because Manhattan distance on a
-  4-connected uniform-cost grid is a consistent heuristic. The 40,000-iteration safety cap
-  still counts expansions, not stale pops. The GAME INFO panel reports mean path solve time,
-  so the effect is measurable in-game.
 - **The belief update is a full grid sweep on the main thread.** `UpdateBelief` walks every
   column three times per planning tick — diffuse, cull, normalize — and the cull step tests each
   surviving cell against every zombie. It is bounded by `repathInterval` (0.4s) rather than by
