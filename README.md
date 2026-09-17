@@ -131,9 +131,9 @@ build entry point) and the [edit-mode tests](Assets/Editor/Tests/IsoNavGridTests
 
 | File | Lines | Purpose |
 | ---- | ----- | ------- |
-| [`JayNpcDemoBuilder.cs`](Assets/Editor/JayNpcDemoBuilder.cs) | 2,021 | The one-click chain: builds both arenas, spawns actors, wires the HUD and objective, saves the `Level1`/`Level2` prefabs into `Assets/Resources/NpcDemo/` and creates the game scene. |
-| [`JayLargeCampusTilemapBuilder.cs`](Assets/Editor/JayLargeCampusTilemapBuilder.cs) | 1,399 | Campus generator (Canteen 168×96, Block E 112×96 cells) on the reference isometric tiles, whose `SetupTileAssets()` the chain calls first. |
-| [`JayNpcSpriteImporter.cs`](Assets/Editor/JayNpcSpriteImporter.cs) | 386 | Slices the raw sheets in `SpriteStaging/` into sprites, keying out the baked-in checkerboard and detecting each animation frame as a connected pixel island. |
+| [`JayNpcDemoBuilder.cs`](Assets/Editor/JayNpcDemoBuilder.cs) | 2,028 | The one-click chain: builds both arenas, spawns actors, wires the HUD and objective, saves the `Level1`/`Level2` prefabs into `Assets/Resources/NpcDemo/` and creates the game scene. |
+| [`JayLargeCampusTilemapBuilder.cs`](Assets/Editor/JayLargeCampusTilemapBuilder.cs) | 1,406 | Campus generator (Canteen 168×96, Block E 112×96 cells) on the reference isometric tiles, whose `SetupTileAssets()` the chain calls first. |
+| [`JayNpcSpriteImporter.cs`](Assets/Editor/JayNpcSpriteImporter.cs) | 393 | Slices the raw sheets in `SpriteStaging/` into sprites, keying out the baked-in checkerboard and detecting each animation frame as a connected pixel island. |
 
 Two menu entries are registered — **Tools > CP5030 > Setup NPC Demo Arena** and
 **Tools > CP5030 > Build Windows Demo**; the other two tools run from inside the chain. Both
@@ -239,5 +239,5 @@ The reservation above covers the original C# under `Assets/Scripts/` and `Assets
 does not extend to third-party material bundled so the prototype runs, which remains subject to
 its owners' terms: the reference tilesets and sprite sheets under `Assets/Imports/`, which come
 from course-supplied material rather than from this project, and Unity Editor, the Unity Engine
-and the packages resolved into `Packages/`, which are licensed by Unity Technologies and the
-respective package authors.
+and the Unity packages this project depends on, which are licensed by Unity Technologies and
+the respective package authors.
