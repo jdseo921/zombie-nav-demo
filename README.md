@@ -241,3 +241,5 @@ its owners' terms: the reference tilesets and sprite sheets under `Assets/Import
 from course-supplied material rather than from this project, and Unity Editor, the Unity Engine
 and the Unity packages this project depends on, which are licensed by Unity Technologies and
 the respective package authors.
+
+The full terms are in [`LICENSE`](LICENSE).
