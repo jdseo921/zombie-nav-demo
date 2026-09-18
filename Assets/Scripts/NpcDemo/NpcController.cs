@@ -10,8 +10,8 @@ using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>
-/// Scripted NPC for the pathfinding demo. Two behaviour profiles, built around the
-/// steering behaviours (pursue / flee / wander / path following / obstacle avoidance)
+/// Scripted NPC for the pathfinding demo. Two behavior profiles, built around the
+/// steering behaviors (pursue / flee / wander / path following / obstacle avoidance)
 /// and navigation-reliability goals described in the research report.
 ///
 /// Zombie   — Patrols waypoints, or WANDERS to random reachable cells when it has none.
@@ -43,7 +43,7 @@ public class NpcController : MonoBehaviour
     public PlayerHealth playerHealth;
     public Transform[] patrolPoints;
 
-    [Header("Behaviour")]
+    [Header("Behavior")]
     public NpcBehavior behavior = NpcBehavior.Zombie;
     [Tooltip("Shown in the state label, e.g. 'Walker' or 'Runner'.")]
     public string displayName;
@@ -747,7 +747,7 @@ public class NpcController : MonoBehaviour
     }
 
     /// <summary>Drops anchor at a cell: hold position there (escort survivors only;
-    /// plain civilians keep their patrol behaviour).</summary>
+    /// plain civilians keep their patrol behavior).</summary>
     private void Anchor(Vector3Int cell)
     {
         anchored = anchoredUntilContact;
@@ -1015,7 +1015,7 @@ public class NpcController : MonoBehaviour
         {
             return false;
         }
-        // Corner circles share centres regardless of inset (concentric outline ring).
+        // Corner circles share centers regardless of inset (concentric outline ring).
         float r = radius - inset;
         float dx = Mathf.Max(Mathf.Max(min + r - x, x - (max - r)), 0f);
         float dy = Mathf.Max(Mathf.Max(min + r - y, y - (max - r)), 0f);

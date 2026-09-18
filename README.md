@@ -59,7 +59,7 @@ If you have two minutes:
   (`MaxStep = 0.6`), so a placed ramp is always climbable and a cliff is always blocked
   independently of colliders — [`IsoNavGrid.cs`](Assets/Scripts/NpcDemo/IsoNavGrid.cs).
 - **A\* pops from a binary heap.** `FindPathInternal` previously picked the lowest-`f` node by
-  scanning a `List<Vector2Int>` and called `open.Contains` for each neighbour — both O(n) on
+  scanning a `List<Vector2Int>` and called `open.Contains` for each neighbor — both O(n) on
   every expansion, worst on the Level 2 maze where flankers path across a 120×120 grid. The
   open set is now a `PathHeap` ordered by `f` then insertion order, with stale entries skipped
   on pop rather than removed on improvement, which is sound because Manhattan distance on a
@@ -180,7 +180,7 @@ level name rather than a fixed caption. It reports the level's algorithm label, 
 HP, A* paths succeeded versus requested, mean path solve time in milliseconds, and the
 stuck-recovery count. On Level 2 it also shows the director's mode (`calm`, `HUNTING (confirmed)`
 or `SEARCHING (peak N%)`), the number of learned routes, and the ambush counters. Each zombie
-additionally carries a world-space label showing its current role, colour-coded per role.
+additionally carries a world-space label showing its current role, color-coded per role.
 
 Note that `Assets/Settings/InputSystem_Actions.inputactions` is the stock Unity input template,
 left in place because the project references it in its settings. Nothing in the demo reads it —
@@ -223,7 +223,7 @@ This is a gameplay and AI prototype built for a university unit (CP5030), not a 
   cost. A sparse representation over the cells with non-zero mass, or moving the sweep off the
   main thread, would scale better with map size and horde count.
 - **Movement and line of sight are 4-connected.** Pathfinding, the flow field and chokepoint
-  detection all use cardinal neighbours only, so routes show visible right-angle staircases on
+  detection all use cardinal neighbors only, so routes show visible right-angle staircases on
   open ground. Path smoothing, or 8-connected steps with corner rules, would address it.
 - **Ambush allocation is greedy and unvalidated.** `AllocateAmbushers` takes hotspots in heat
   order, accepts the first chokepoint found on an expanding ring search, and only requires that

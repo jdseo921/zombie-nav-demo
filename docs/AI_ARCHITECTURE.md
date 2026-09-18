@@ -38,7 +38,7 @@ walkable column. Each tick is one recursive-Bayes step:
 
 - *Collapse.* If any zombie currently sees or hears the player (`TargetConfirmed` — a sighting
   within the last 0.6s), the belief collapses to a single cell with probability 1.
-- *Diffusion.* Otherwise the mass spreads to walkable neighbours at `diffusionRate`, a
+- *Diffusion.* Otherwise the mass spreads to walkable neighbors at `diffusionRate`, a
   random-walk motion model for a target the horde cannot see.
 - *Culling by negative observation.* Any cell a zombie can currently see (within
   `sightCullRange`, with clear line of sight) is multiplied by `negativeObservation` (0.06).

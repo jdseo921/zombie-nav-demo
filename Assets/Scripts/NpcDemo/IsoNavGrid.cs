@@ -579,7 +579,7 @@ public class IsoNavGrid : MonoBehaviour
     /// Min-heap over (f, insertion order) for the A* open set.
     ///
     /// The previous open set was a List scanned linearly for the lowest f, with an
-    /// open.Contains() membership test per neighbour - O(n) for both, on every
+    /// open.Contains() membership test per neighbor - O(n) for both, on every
     /// expansion. That cost is worst on the Level 2 maze, where flankers path
     /// across a 120x120 grid. Pop and Push here are O(log n).
     ///

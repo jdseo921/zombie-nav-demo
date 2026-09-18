@@ -15,7 +15,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
 
 /// <summary>
-/// CP5030 NPC behaviour demo for Jay's zombie RPG.
+/// CP5030 NPC behavior demo for Jay's zombie RPG.
 ///
 /// ONE-CLICK SETUP: "Tools > CP5030 > Setup NPC Demo Arena" runs the whole chain -
 /// reference-tile setup (needs examples.unitypackage imported once), character sheet
@@ -79,7 +79,7 @@ public static class JayNpcDemoBuilder
     private static readonly Color TintZ1 = new Color(1f, 0.88f, 0.66f);
     private static readonly Color TintZ2 = new Color(1f, 0.78f, 0.52f);
     private static readonly Color TintExtraction = new Color(0.62f, 1f, 0.66f);
-    // Sand-coloured floor strip marking every doorway/exit threshold.
+    // Sand-colored floor strip marking every doorway/exit threshold.
     private static readonly Color TintThreshold = new Color(1f, 0.93f, 0.70f);
 
     private static readonly string[] RequiredTiles =
@@ -375,7 +375,7 @@ public static class JayNpcDemoBuilder
     /// <summary>
     /// Generates the "block wall" sprites: a solid prism drawn over the EXACT cell
     /// diamond (top diamond face + SW/SE side faces), pivot at the base diamond's
-    /// centre. One sprite covers one cell, so wall art and wall collider can never
+    /// center. One sprite covers one cell, so wall art and wall collider can never
     /// disagree - unlike the reference wall sprites, which draw along a single cell
     /// edge and leave most of their blocked cell looking walkable.
     /// </summary>
@@ -402,7 +402,7 @@ public static class JayNpcDemoBuilder
     }
 
     /// <summary>Draws one block-wall PNG, imports it (256 PPU, pivot on the base diamond
-    /// centre) and creates/updates its Tile asset in the shared tile folder.</summary>
+    /// center) and creates/updates its Tile asset in the shared tile folder.</summary>
     private static void BlockWallSprite(string name, int faceH, bool courses, int seed,
         Color top, Color sw, Color se)
     {
@@ -422,7 +422,7 @@ public static class JayNpcDemoBuilder
 
         for (int px = 0; px < W; px++)
         {
-            // Diamond extent at this column: full height at the centre, zero at the tips.
+            // Diamond extent at this column: full height at the center, zero at the tips.
             float extent = (1f - Mathf.Abs(px - 127.5f) / 128f) * (DiamondH / 2f);
             int yBottom = Mathf.RoundToInt(DiamondH / 2f - extent);   // South silhouette (V shape).
             int yRidge = yBottom + faceH;                              // Face/top boundary.
@@ -543,7 +543,7 @@ public static class JayNpcDemoBuilder
         SaveBlockSprite(name, tex, H);
     }
 
-    /// <summary>Writes the PNG, imports it (256 PPU, pivot on the base diamond centre)
+    /// <summary>Writes the PNG, imports it (256 PPU, pivot on the base diamond center)
     /// and creates/updates its Tile asset in the shared tile folder.</summary>
     private static void SaveBlockSprite(string name, Texture2D tex, int height)
     {
@@ -562,7 +562,7 @@ public static class JayNpcDemoBuilder
         TextureImporterSettings settings = new TextureImporterSettings();
         importer.ReadTextureSettings(settings);
         settings.spriteAlignment = (int)SpriteAlignment.Custom;
-        settings.spritePivot = new Vector2(0.5f, 64f / height);   // Base diamond centre.
+        settings.spritePivot = new Vector2(0.5f, 64f / height);   // Base diamond center.
         importer.SetTextureSettings(settings);
         importer.SaveAndReimport();
 
@@ -658,7 +658,7 @@ public static class JayNpcDemoBuilder
     /// <summary>
     /// Solid wall run whose art fills every blocked cell: block-wall sprites are a
     /// full-cell prism (top diamond + SW/SE faces over the exact cell diamond, pivot at
-    /// the base centre), so the wall you SEE is exactly the set of cells the collider
+    /// the base center), so the wall you SEE is exactly the set of cells the collider
     /// blocks - no standing "on" walls, no bumping into seemingly empty space.
     /// </summary>
     private static void WallBlockRow(Arena a, Dictionary<string, TileBase> t, string tileName, int x0, int x1, int y, params int[] gaps)
@@ -772,7 +772,7 @@ public static class JayNpcDemoBuilder
         }
 
         // Visible faces: earth blocks, one z-level tall - unmistakably terrain, never
-        // confusable with the grey walls (art + cosmetic colliders; the height gate
+        // confusable with the gray walls (art + cosmetic colliders; the height gate
         // does the real blocking).
         for (int ix = x; ix < x + w; ix++)
         {
@@ -938,7 +938,7 @@ public static class JayNpcDemoBuilder
         WallBlockCol(a, t, "block_wall_fence", 0, 1, Height - 2);
         WallBlockCol(a, t, "block_wall_fence", Width - 1, 1, Height - 2);
 
-        // Two roadblocks with a clear centre (near the spur junction).
+        // Two roadblocks with a clear center (near the spur junction).
         Roadblock(a, t, 16, 9911);
         Roadblock(a, t, 46, 9912);
         BloodTrail(a, t, 46, 31, 52, 26, 9913);
@@ -1297,7 +1297,7 @@ public static class JayNpcDemoBuilder
     }
 
     /// <summary>
-    /// Auto-repair: any lattice room whose centre is unreachable from the player start
+    /// Auto-repair: any lattice room whose center is unreachable from the player start
     /// gets doorways carved on all four of its walls; repeats until everything connects.
     /// </summary>
     private static void RepairMazeConnectivity(Arena a, Dictionary<string, TileBase> t, IsoNavGrid nav)
@@ -1808,7 +1808,7 @@ public static class JayNpcDemoBuilder
         objective.playerHealth = health;
         objective.survivors = survivors;
         objective.extractionCell = extraction;
-        // Wider than the survivors' follow distance, so standing at the centre always
+        // Wider than the survivors' follow distance, so standing at the center always
         // pulls the following survivors inside too.
         objective.zoneRadius = 3f;
 

@@ -29,7 +29,7 @@ public class LevelObjective : MonoBehaviour
 
     [Header("Extraction zone")]
     public Vector3Int extractionCell;
-    public float zoneRadius = 3f;   // World units around the zone centre.
+    public float zoneRadius = 3f;   // World units around the zone center.
 
     public State Outcome { get; private set; }
     public bool PlayerInZone { get; private set; }

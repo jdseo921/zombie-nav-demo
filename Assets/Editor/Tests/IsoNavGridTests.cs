@@ -110,7 +110,7 @@ public class IsoNavGridTests
             "...");
 
         Assert.IsFalse(nav.ColumnWalkable(1, 1), "a collider on the top floor blocks its column");
-        Assert.IsTrue(nav.ColumnWalkable(0, 1), "neighbouring floor stays walkable");
+        Assert.IsTrue(nav.ColumnWalkable(0, 1), "neighboring floor stays walkable");
         Assert.AreEqual(8, nav.TotalWalkableColumns, "eight of the nine columns remain walkable");
     }
 

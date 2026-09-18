@@ -10,7 +10,7 @@ using UnityEngine;
 
 /// <summary>
 /// Level 2 pursuit AI: PROBABILISTIC OCCUPANCY-MAP PURSUIT with shared flow-field
-/// navigation, role-based interception and an online player-behaviour bias.
+/// navigation, role-based interception and an online player-behavior bias.
 ///
 /// Level 1's zombies replan A* to the player's true position (classical replanning
 /// against a moving target, cf. Hart, Nilsson &amp; Raphael 1968; Ishida &amp; Korf's
@@ -20,7 +20,7 @@ using UnityEngine;
 /// 1. OCCUPANCY-MAP TARGET TRACKING (belief state). When no zombie can see or hear the
 ///    player, the director maintains a probability distribution ("belief") over every
 ///    walkable column of where the player might be. Each planning tick the belief
-///    DIFFUSES to neighbouring columns (a random-walk motion model of the hidden
+///    DIFFUSES to neighboring columns (a random-walk motion model of the hidden
 ///    target) and is CULLED wherever a zombie can currently see (negative
 ///    observations) - recursive Bayesian estimation on a grid, after occupancy grids
 ///    in robotics (Moravec &amp; Elfes 1985; Elfes 1989) and their game adaptation for
@@ -40,7 +40,7 @@ using UnityEngine;
 ///    fields, Treuille, Cooper &amp; Popovic 2006).
 /// 4. PLAYER MODELLING. A decaying visit heatmap biases belief diffusion and cut-off
 ///    placement toward the player's habitual routes, so the horde "learns" escape
-///    patterns over a session (lightweight online player modelling, cf. Yannakakis
+///    patterns over a session (lightweight online player modeling, cf. Yannakakis
 ///    &amp; Togelius 2013).
 /// 5. HABIT-ANTICIPATORY AMBUSH ALLOCATION (original extension of this project). The
 ///    director fuses the ONLINE player-route model (4) with a STATIC chokepoint
@@ -71,7 +71,7 @@ public class HordeDirector : MonoBehaviour
     public float repathInterval = 0.4f;
 
     [Header("Belief (occupancy map)")]
-    [Tooltip("Probability mass that spreads to neighbours per tick (hidden-target motion model).")]
+    [Tooltip("Probability mass that spreads to neighbors per tick (hidden-target motion model).")]
     [Range(0f, 0.9f)] public float diffusionRate = 0.45f;
     [Tooltip("How strongly the learned heatmap attracts belief diffusion (0 = pure random walk).")]
     public float heatBias = 0.6f;
